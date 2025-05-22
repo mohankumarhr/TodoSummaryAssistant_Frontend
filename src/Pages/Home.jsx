@@ -3,6 +3,8 @@ import styles from '../css/HomePage.module.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BounceLoader } from 'react-spinners';
+import { base_url } from '../data';
+
 
 function Home() {
   
@@ -17,8 +19,9 @@ const [loader, setLoader] = useState(false)
   const [summaryData, setSummaryData] = useState({ summary: '', slackStatus: '' });
 
   const handleCreateTodo = async () => {
+    setLoader(true)
     try {
-      await axios.post('http://localhost:8080/api/todos', {
+      await axios.post(`${base_url}/api/todos`, {
         title: title,
         completed: 0,
       });
@@ -29,12 +32,13 @@ const [loader, setLoader] = useState(false)
       console.error('Error creating todo:', error);
       alert('Failed to create todo');
     }
+    setLoader(false)
   };
 
   const handleSummarizeTodos = async () => {
     setLoader(true)
     try {
-      const response = await axios.get('http://localhost:8080/api/summary');
+      const response = await axios.get(`${base_url}/api/summary`);
       setSummaryData({
         summary: response.data.summary,
         slackStatus: response.data.slackStatus,
